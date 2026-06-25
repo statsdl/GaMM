@@ -4,34 +4,44 @@
 [![GitHub last commit](https://img.shields.io/github/last-commit/statsdl/GaMM)](https://github.com/statsdl/GaMM/commits/main)
 [![GitHub issues](https://img.shields.io/github/issues/statsdl/GaMM)](https://github.com/statsdl/GaMM/issues)
 [![GitHub stars](https://img.shields.io/github/stars/statsdl/GaMM)](https://github.com/statsdl/GaMM/stargazers)
-[![Python Version](https://img.shields.io/pypi/pyversions/gamm)](https://pypi.org/project/gamm/)
-[![License](https://img.shields.io/pypi/l/gamm)](https://github.com/statsdl/GaMM/blob/main/LICENSE)
+[![Python Version](https://img.shields.io/pypi/pyversions/volatility-gamm)](https://pypi.org/project/volatility-gamm/)
+[![License](https://img.shields.io/pypi/l/volatility-gamm)](https://github.com/statsdl/GaMM/blob/main/LICENSE)
 
 A rich documentation is available in the GitHub repository.
 
-# GaMM: GARCH-Assisted Neural Heteroscedasticity Model
+# volatility-gamm
 
-GaMM is a Python package for high-frequency volatility forecasting and risk assessment using neural networks-based heteroscedasticity modeling.
+GARCH-based MLP Mixer for high-frequency volatility forecasting and risk assessment.
 
-The package provides utilities for synthetic 5-minute financial price generation, volatility-frame construction, GARCH-family feature extraction, GaMMixer model construction, hyperparameter tuning, and volatility-risk metrics.
+volatility-gamm is a Python package for volatility forecasting using GARCH-based MLP Mixer models. The package is designed for high-frequency financial time-series experiments where volatility dynamics, risk estimation, and nonlinear temporal structure are important.
 
-GaMM combines econometric volatility features from GARCH-family models with neural feature learning through a mixer-style architecture. This makes it useful for volatility forecasting, high-frequency time-series experiments, and Value-at-Risk based risk assessment.
+The package combines GARCH-family volatility information with MLP-Mixer style neural feature learning. This allows volatility forecasts to benefit from both econometric conditional-volatility modeling and neural nonlinear representation learning.
 
 This package provides two primary components:
 
-* `GaMM` data utilities: tools for converting high-frequency close prices into supervised volatility forecasting datasets.
+* GARCH-based volatility features: utilities for using GARCH, GJR-GARCH, Threshold GARCH, AVGARCH, and FIGARCH conditional-volatility estimates as model inputs.
 
-* `GaMMixer` model utilities: Keras-based model-building helpers with configurable normalization, activation, dropout, feed-forward dimension, and mixer blocks.
+* GaMM neural model: a configurable MLP-Mixer style architecture for volatility forecasting with normalization, activation, dropout, feed-forward dimension, and mixer-block controls.
+
+Both components are useful for volatility forecasting and risk assessment because financial time series often contain volatility clustering, nonlinear temporal dependence, and heavy-tailed risk behavior.
 
 # Key Features
 
-* Volatility Forecasting: Designed for high-frequency financial volatility prediction.
-* GARCH-Assisted Features: Supports GARCH, GJR-GARCH, ThGARCH, AVGARCH, and FIGARCH volatility features.
-* Neural Model Construction: Provides GaMMixer model-building and compilation utilities.
-* Hyperparameter Tuning: Includes Hyperopt/TPE-based search utilities.
-* Risk Assessment: Includes a normal Value-at-Risk helper for volatility forecasts.
-* Forecasting Metrics: Provides RMSE, MAE, MAPE, NMAE, and QLIKE metrics.
-* Reproducible Examples: Includes synthetic 5-minute close-price generation and benchmark helpers.
+* GARCH-based MLP Mixer: Combines GARCH-family volatility features with neural MLP-Mixer modeling.
+
+* High-Frequency Volatility Forecasting: Designed for intraday financial volatility forecasting tasks.
+
+* Econometric Feature Integration: Supports GARCH, GJR-GARCH, Threshold GARCH, AVGARCH, and FIGARCH-style volatility features.
+
+* Neural Forecasting Model: Provides Keras-based GaMM model construction and compilation utilities.
+
+* Hyperparameter Tuning: Includes Hyperopt/TPE-based tuning helpers for reproducible model selection.
+
+* Risk Assessment: Includes Value-at-Risk utilities for volatility-based financial risk evaluation.
+
+* Forecasting Metrics: Provides RMSE, MAE, MAPE, NMAE, and QLIKE.
+
+* Research-Oriented Design: Suitable for reproducible academic experiments in volatility forecasting and financial risk modeling.
 
 # Installation
 
@@ -54,11 +64,11 @@ Using pip install from GitHub
 
 Using pip install from PyPI
 
-    pip install gamm
+    pip install volatility-gamm
 
 Optional full installation
 
-    pip install "gamm[full]"
+    pip install "volatility-gamm[full]"
 
 Development installation
 
@@ -66,32 +76,18 @@ Development installation
 
 # Usage
 
-## 1. Dataset preparation
+## 1. GaMM model
 
 Example
 
-    from gamm import generate_synthetic_5m_close, make_gamm_dataset, gamm_defaults
-
-    defaults = gamm_defaults()
-    prices = generate_synthetic_5m_close(n_days=30, seed=0)
-
-    data = make_gamm_dataset(
-        prices,
-        lag=int(defaults["lag"]),
-        lag_sd=int(defaults["lag_sd"]),
-        timestep=int(defaults["timestep"]),
-    )
-
-    print(data.X.shape, data.y.shape)
-
-## 2. GaMMixer model
-
-Example
-
+    import numpy as np
     from gamm.model import compile_gamm_model
 
+    X_train = np.random.randn(200, 20, 6).astype("float32")
+    y_train = np.random.rand(200).astype("float32")
+
     model = compile_gamm_model(
-        input_shape=(data.X.shape[1], data.X.shape[2]),
+        input_shape=(X_train.shape[1], X_train.shape[2]),
         learning_rate=0.001,
         activation="relu",
         n_block=2,
@@ -99,37 +95,60 @@ Example
         ff_dim=64,
     )
 
+    model.fit(X_train, y_train, epochs=5, batch_size=32, verbose=0)
+
+    predictions = model.predict(X_train[:10], verbose=0)
+    print("Volatility forecasts:", predictions.reshape(-1))
+
+## 2. Volatility forecasting metrics
+
+Example
+
+    import numpy as np
+    from gamm.metrics import (
+        root_mean_squared_error,
+        mean_absolute_error,
+        mean_absolute_percentage_error,
+        normalized_mean_absolute_error,
+        quasi_likelihood,
+        value_at_risk,
+    )
+
+    y_true = np.array([0.12, 0.15, 0.09, 0.18])
+    y_pred = np.array([0.11, 0.14, 0.10, 0.17])
+
+    print("RMSE:", root_mean_squared_error(y_true, y_pred))
+    print("MAE:", mean_absolute_error(y_true, y_pred))
+    print("MAPE:", mean_absolute_percentage_error(y_true, y_pred))
+    print("NMAE:", normalized_mean_absolute_error(y_true, y_pred))
+    print("QLIKE:", quasi_likelihood(y_true, y_pred))
+    print("VaR:", value_at_risk(0.05, y_pred))
+
 ## 3. Synthetic benchmark
 
 Example
 
     python examples/run_synthetic_benchmark.py
 
-The benchmark compares GaMM with GARCH-family volatility estimates and reports volatility forecasting metrics.
+The benchmark compares GaMM with GARCH-family volatility estimates and reports volatility forecasting and risk metrics.
 
 # API Reference
 
-## Data utilities
-
-`generate_synthetic_5m_close`: Generates synthetic 5-minute close prices with volatility clustering.
-
-`volatility_frame`: Computes returns, lagged returns, trailing standard deviation, and realized standard deviation.
-
-`make_gamm_dataset`: Converts high-frequency prices into supervised GaMM forecasting tensors.
-
-`make_gamm_dataset_with_garch_features`: Adds GARCH-family volatility features to the supervised dataset.
-
-`chronological_splits`: Creates chronological train, validation, full-train, and test indexes.
-
 ## Model utilities
 
-`build_gamm_model`: Builds a GaMMixer Keras model.
+`build_gamm_model`: Builds a GARCH-based MLP Mixer model.
 
-`compile_gamm_model`: Builds and compiles the GaMMixer model with Adam and MSE loss.
+`compile_gamm_model`: Builds and compiles the GaMM model with Adam optimizer and MSE loss.
+
+## Tuning utilities
 
 `gamm_tuning_space`: Returns the default Hyperopt/TPE search space.
 
-`tune_gamm`: Tunes GaMMixer hyperparameters.
+`tune_gamm`: Tunes GaMM hyperparameters.
+
+## GARCH utilities
+
+`append_garch_features`: Adds GARCH-family conditional-volatility features when optional dependencies are installed.
 
 ## Metrics
 
@@ -145,14 +164,36 @@ The benchmark compares GaMM with GARCH-family volatility estimates and reports v
 
 `value_at_risk`: Computes normal Value-at-Risk from volatility forecasts.
 
+# How It Works
+
+GaMM:
+
+The model receives a lagged volatility feature tensor with lagged return and standard deviation-based volatility measure.
+
+Mixer blocks learn interactions across time steps and variables.
+
+The final dense output layer produces the volatility forecast.
+
+GARCH-based features:
+
+Conditional-volatility estimates are generated from GARCH-family models.
+
+These features provide the neural model with econometric volatility information.
+
+Risk assessment:
+
+Forecasted volatility can be converted into Value-at-Risk estimates.
+
+Forecast quality is evaluated using volatility-specific metrics such as QLIKE.
+
 # Dataset Details
 
 | Component | Description |
 |---|---|
-| Input data | High-frequency close prices |
-| Frequency example | 5-minute observations |
-| Target | Realized volatility / standard deviation |
+| Input type | High-frequency financial time-series features |
+| Forecasting target | Volatility / realized volatility |
 | Optional features | GARCH-family conditional volatilities |
+| Model type | GARCH-based MLP Mixer |
 | Split type | Chronological train-validation-test split |
 | Metrics | RMSE, MAE, MAPE, NMAE, QLIKE, VaR |
 
@@ -162,9 +203,7 @@ This project is licensed under the MIT License. See the LICENSE file for details
 
 # Citation
 
-If you are using this package in your research, please consider citing the following paper:
-
-High frequency volatility forecasting and risk assessment using neural networks-based heteroscedasticity model: Aryan Bhambu, Koushik Bera, Selvaraju Natarajan, Ponnuthurai Nagaratnam Suganthan.
+If you are using this package in your research, please cite the following paper:
 
     @article{bhambu2025highfrequency,
       title={High frequency volatility forecasting and risk assessment using neural networks-based heteroscedasticity model},
@@ -176,6 +215,4 @@ High frequency volatility forecasting and risk assessment using neural networks-
       doi={10.1016/j.engappai.2025.110397}
     }
 
-# References
 
-Bhambu, A., Bera, K., Natarajan, S., and Suganthan, P. N. (2025). High frequency volatility forecasting and risk assessment using neural networks-based heteroscedasticity model. Engineering Applications of Artificial Intelligence, 149, 110397.
