@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "volatility-gamm"
-version = "0.1.0"
+version = "0.1.1"
 description = "GARCH-based MLP Mixer for high-frequency volatility forecasting and risk assessment."
 readme = "PYPI_README.md"
 requires-python = ">=3.10"
