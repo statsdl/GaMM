@@ -1,8 +1,8 @@
-# GaMM: GARCH-Assisted Neural Heteroscedasticity Model
+# GaMM: GARCH-Based MLP Mixer based Neural Heteroscedasticity Model
 
 ![GaMM Banner](https://img.shields.io/badge/GaMM-High--Frequency%20Volatility%20Forecasting-blue)
 
-⚡ Fast GaMMixer utilities for high-frequency volatility forecasting and financial risk assessment ⚡
+⚡ Fast GaMM utilities for high-frequency volatility forecasting and financial risk assessment ⚡
 
 **Features • Installation • Quick Start • Synthetic Benchmark • Citation**
 
@@ -25,12 +25,6 @@
 - Short-horizon financial risk assessment
 - Market uncertainty monitoring
 
-### 🔬 Research Experiments
-
-- GARCH-assisted neural forecasting
-- Neural heteroscedasticity modeling
-- Synthetic 5-minute price benchmarks
-
 GaMM provides a clean Python package for GARCH-assisted high-frequency volatility forecasting. It combines GARCH-family volatility features with a GaMMixer neural architecture for regression-style volatility prediction and risk evaluation.
 
 The package is designed for reproducible experiments, lightweight imports, optional model-training extras, and clean integration into forecasting workflows.
@@ -39,14 +33,13 @@ The package is designed for reproducible experiments, lightweight imports, optio
 
 ### 📊 Forecasting Workflow
 
-- ✅ Synthetic 5-minute close-price generation
 - ✅ Volatility-frame construction from high-frequency prices
 - ✅ Chronological train, validation, and test splitting
 - ✅ GARCH-family feature integration
 
 ### 🧠 Neural Model Utilities
 
-- ✅ GaMMixer model construction with lazy TensorFlow imports
+- ✅ GaMM model construction with lazy TensorFlow imports
 - ✅ Batch-normalization and layer-normalization options
 - ✅ Dropout, feed-forward dimension, and block-count configuration
 - ✅ Hyperopt/TPE tuning utilities
@@ -141,7 +134,6 @@ The benchmark reports results for GARCH, AVGARCH, FIGARCH, GJR-GARCH, ThGARCH, a
 
 ### Data utilities
 
-- `generate_synthetic_5m_close`
 - `volatility_frame`
 - `make_gamm_dataset`
 - `make_gamm_dataset_with_garch_features`
@@ -194,9 +186,3 @@ If you use GaMM in your research, please cite:
   doi={10.1016/j.engappai.2025.110397}
 }
 ```
-
-## 🏆 Acknowledgments
-
-GaMM builds on the Python scientific computing ecosystem, including NumPy, Pandas, TensorFlow/Keras, Hyperopt, and ARCH.
-
-⭐ Star the repository if GaMM helps your volatility forecasting research.
