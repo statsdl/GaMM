@@ -12,6 +12,9 @@ license = "MIT"
 license-files = ["LICENSE"]
 authors = [
     {name = "Aryan Bhambu"},
+    {name = "Koushik Bera"},
+    {name = "Selvaraju Natarajan"},
+    {name = "Ponnuthurai Nagaratnam Suganthan"},
 ]
 keywords = ["gamm", "garch", "mlp-mixer", "volatility", "finance", "high-frequency"]
 classifiers = [
