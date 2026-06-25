@@ -1,0 +1,8 @@
+include README.md
+include PYPI_README.md
+include LICENSE
+include CITATION.cff
+include CONTRIBUTING.md
+include requirements.txt
+recursive-include examples *.py
+recursive-include docs *.rst

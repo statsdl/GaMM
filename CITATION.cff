@@ -1,0 +1,27 @@
+cff-version: 1.2.0
+message: "If you use GaMM in academic work, please cite this software and the associated paper."
+title: "GaMM"
+version: "0.1.0"
+date-released: "2026-06-25"
+authors:
+  - family-names: "Bhambu"
+    given-names: "Aryan"
+license: "MIT"
+repository-code: "https://github.com/statsdl/GaMM"
+preferred-citation:
+  type: article
+  title: "High frequency volatility forecasting and risk assessment using neural networks-based heteroscedasticity model"
+  authors:
+    - family-names: "Bhambu"
+      given-names: "Aryan"
+    - family-names: "Bera"
+      given-names: "Koushik"
+    - family-names: "Natarajan"
+      given-names: "Selvaraju"
+    - family-names: "Suganthan"
+      given-names: "Ponnuthurai Nagaratnam"
+  journal: "Engineering Applications of Artificial Intelligence"
+  volume: "149"
+  year: 2025
+  start: "110397"
+  doi: "10.1016/j.engappai.2025.110397"
