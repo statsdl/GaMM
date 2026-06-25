@@ -3,9 +3,9 @@ requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "gamm"
+name = "volatility-gamm"
 version = "0.1.0"
-description = "GARCH-assisted GaMMixer utilities for high-frequency volatility forecasting and risk assessment."
+description = "GARCH-based MLP Mixer for high-frequency volatility forecasting and risk assessment."
 readme = "PYPI_README.md"
 requires-python = ">=3.10"
 license = "MIT"
